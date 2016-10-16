@@ -1,5 +1,4 @@
-'use strict';
-let mime = require('mime'),
+var mime = require('mime'),
     fs = require('fs');
 /**
  * Express middleware that serves static gzipped assets if they are available with specified max-age
@@ -16,14 +15,14 @@ module.exports = function(assetPath,cacheControl, exclusions) {
    * @param  {Function} next next in express
    */
   return function(req, res, next) {
-    let acceptEncodingsString = req.get('Accept-Encoding'),
+    var acceptEncodingsString = req.get('Accept-Encoding'),
         exclusions = exclusions || /.*/,
         cacheControl = cacheControl || 'public, max-age=604800', // cacheControl or 1 week
         originalPath = req.path;
     if (!exclusions.test(originalPath) || typeof acceptEncodingsString != 'undefined') {
-      let acceptEncodings = acceptEncodingsString.split(", ");
+      var acceptEncodings = acceptEncodingsString.split(", ");
       try {
-        let stats = fs.statSync(`${assetPath}/${originalPath}.gz`);
+        var stats = fs.statSync(`${assetPath}/${originalPath}.gz`);
 
         if (acceptEncodings.indexOf('gzip') >= 0 && stats.isFile()) {
           res.append('Content-Encoding', 'gzip');
@@ -31,9 +30,9 @@ module.exports = function(assetPath,cacheControl, exclusions) {
           res.setHeader('Cache-Control', cacheControl);
           req.url = `${req.url}.gz`;
 
-          let type = mime.lookup(`${assetPath}/${originalPath}`);
+          var type = mime.lookup(`${assetPath}/${originalPath}`);
           if (typeof type != 'undefined') {
-            let charset = mime.charsets.lookup(type);
+            var charset = mime.charsets.lookup(type);
             res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
           }
         }
