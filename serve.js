@@ -19,6 +19,7 @@ module.exports = function(assetPath,cacheControl, exclusions) {
         exclusions = exclusions || /.*/,
         cacheControl = cacheControl || 'public, max-age=604800', // cacheControl or 1 week
         originalPath = req.path;
+        console.log(` exclusions ${exclusions.toString()} originalPath ${originalPath} test ${exclusions.test(originalPath)}`);
     if (!exclusions.test(originalPath) || typeof acceptEncodingsString != 'undefined') {
       var acceptEncodings = acceptEncodingsString.split(", ");
       try {
