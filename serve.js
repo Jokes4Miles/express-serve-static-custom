@@ -1,6 +1,5 @@
 var mime = require('mime'),
-    fs = require('fs'),
-    Regex = require('regex');
+    fs = require('fs');
 /**
  * Express middleware that serves static gzipped assets if they are available with specified max-age
  * @param  {String} assetPath    where the assets are stored
@@ -8,7 +7,7 @@ var mime = require('mime'),
  * @param  {RegExp} Regular Expression to match filepaths to exclude
  * @return {function}
  */
-module.exports = function(assetPath,cacheControl,exclusions) {
+module.exports = function(assetPath,cacheControl,exclusion) {
   /**
    * Executed when called by express
    * @param  {Object}   req  request from express
@@ -18,15 +17,13 @@ module.exports = function(assetPath,cacheControl,exclusions) {
   return function(req, res, next) {
     var acceptEncodingsString = req.get('Accept-Encoding'),
         originalPath = req.path;
-        console.log(`assetPath ${assetPath}`);
-        console.log(`cacheControl ${cacheControl}`);
-        console.log(`exclusions ${exclusions.toString()} originalPath ${originalPath} test ${exclusions.test(originalPath)}`);
-    if (!exclusions.test(originalPath) || typeof acceptEncodingsString != 'undefined') {
+        console.log(`assetPath ${assetPath} cacheControl ${cacheControl} exclusion ${exclusion} originalPath ${originalPath}`);
+    if(originalPath.indexOf(exclusion) < 0 || typeof acceptEncodingsString != 'undefined') {
       var acceptEncodings = acceptEncodingsString.split(", ");
       try {
         var stats = fs.statSync(`${assetPath}/${originalPath}.gz`);
 
-        if (acceptEncodings.indexOf('gzip') >= 0 && stats.isFile()) {
+        if(acceptEncodings.indexOf('gzip') >= 0 && stats.isFile()) {
           res.append('Content-Encoding', 'gzip');
           res.setHeader('Vary', 'Accept-Encoding');
           res.setHeader('Cache-Control', cacheControl);
