@@ -17,7 +17,6 @@ module.exports = function(assetPath,cacheControl,exclusion) {
   return function(req, res, next) {
     var acceptEncodingsString = req.get('Accept-Encoding'),
         originalPath = req.path;
-        console.log(`assetPath ${assetPath} cacheControl ${cacheControl} exclusion ${exclusion} originalPath ${originalPath}`);
     if(originalPath.indexOf(exclusion) < 0 || typeof acceptEncodingsString != 'undefined') {
       var acceptEncodings = acceptEncodingsString.split(", ");
       try {
@@ -33,6 +32,7 @@ module.exports = function(assetPath,cacheControl,exclusion) {
           if (typeof type != 'undefined') {
             var charset = mime.charsets.lookup(type);
             res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
+            console.log(`assetPath ${assetPath} cacheControl ${cacheControl} exclusion ${exclusion} originalPath ${originalPath} test ${originalPath.indexOf(exclusion) < 0}`);
           }
         }
       } catch(e) {
