@@ -1,5 +1,6 @@
 var mime = require('mime'),
-    fs = require('fs');
+    fs = require('fs'),
+    Regex = require('regex');
 /**
  * Express middleware that serves static gzipped assets if they are available with specified max-age
  * @param  {String} assetPath    where the assets are stored
