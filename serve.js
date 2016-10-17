@@ -17,6 +17,7 @@ module.exports = function(assetPath,cacheControl,exclusion) {
   return function(req, res, next) {
     var acceptEncodingsString = req.get('Accept-Encoding'),
         originalPath = req.path;
+    res.setHeader('Cache-Control', cacheControl);
     if(!exclusion.test(originalPath) && typeof acceptEncodingsString != 'undefined') {
       var acceptEncodings = acceptEncodingsString.split(", ");
       try {
@@ -25,7 +26,6 @@ module.exports = function(assetPath,cacheControl,exclusion) {
         if(acceptEncodings.indexOf('gzip') >= 0 && stats.isFile()) {
           res.append('Content-Encoding', 'gzip');
           res.setHeader('Vary', 'Accept-Encoding');
-          res.setHeader('Cache-Control', cacheControl);
           req.url = `${req.url}.gz`;
 
           var type = mime.lookup(`${assetPath}/${originalPath}`);
