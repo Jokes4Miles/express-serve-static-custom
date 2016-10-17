@@ -7,7 +7,7 @@ var mime = require('mime'),
  * @param  {RegExp} Regular Expression to match filepaths to exclude
  * @return {function}
  */
-module.exports = function(assetPath,cacheControl, exclusions) {
+module.exports = function(assetPath,cacheControl,exclusions) {
   /**
    * Executed when called by express
    * @param  {Object}   req  request from express
@@ -16,10 +16,10 @@ module.exports = function(assetPath,cacheControl, exclusions) {
    */
   return function(req, res, next) {
     var acceptEncodingsString = req.get('Accept-Encoding'),
-        exclusions = exclusions,
-        cacheControl = cacheControl,
         originalPath = req.path;
-        console.log(`assetPath ${assetPath} cacheControl ${cacheControl} exclusions ${exclusions.toString()} originalPath ${originalPath} test ${exclusions.test(originalPath)}`);
+        console.log(`assetPath ${assetPath}`);
+        console.log(`cacheControl ${cacheControl}`);
+        console.log(`exclusions ${exclusions.toString()} originalPath ${originalPath} test ${exclusions.test(originalPath)}`);
     if (!exclusions.test(originalPath) || typeof acceptEncodingsString != 'undefined') {
       var acceptEncodings = acceptEncodingsString.split(", ");
       try {
