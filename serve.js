@@ -22,12 +22,13 @@ module.exports = function(assetPath,cacheControl,exclusion) {
       var acceptEncodings = acceptEncodingsString.split(", ");
       try {
         var stats = fs.statSync(`${assetPath}/${originalPath}.gz`);
+        console.log(`${assetPath}/${originalPath}.gz`);
 
         if(acceptEncodings.indexOf('gzip') >= 0 && stats.isFile()) {
           res.append('Content-Encoding', 'gzip');
           res.setHeader('Vary', 'Accept-Encoding');
           req.url = `${req.url}.gz`;
-
+          console.log(res.toString());
           var type = mime.lookup(`${assetPath}/${originalPath}`);
           if (typeof type != 'undefined') {
             var charset = mime.charsets.lookup(type);
