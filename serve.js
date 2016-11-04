@@ -18,7 +18,6 @@ module.exports = function(assetPath,cacheControl,exclusion) {
     var acceptEncodingsString = req.get('Accept-Encoding'),
         originalPath = req.path;
     res.setHeader('Cache-Control', cacheControl);
-    console.log(`not exclusion ${exclusion.test(originalPath)}`)
     if(!exclusion.test(originalPath) && typeof acceptEncodingsString != 'undefined') {
       var acceptEncodings = acceptEncodingsString.split(", ");
       try {
@@ -26,15 +25,15 @@ module.exports = function(assetPath,cacheControl,exclusion) {
         console.log(`${assetPath}${originalPath}.gz`);
 
         if(acceptEncodings.indexOf('gzip') >= 0 && stats.isFile()) {
-          res.append('Content-Encoding', 'gzip');
+          res.setHeader('Content-Encoding', 'gzip');
           res.setHeader('Vary', 'Accept-Encoding');
           req.url = `${req.url}.gz`;
-          console.log(res.toString());
           var type = mime.lookup(`${assetPath}${originalPath}`);
+          console.log(type);
           if (typeof type != 'undefined') {
             var charset = mime.charsets.lookup(type);
             res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
-            console.log(JSON.stringify(res));
+            console.log('set content type');
           }
         }
       } catch(e) {
