@@ -19,18 +19,18 @@ module.exports = function(assetPath,cacheControl,exclusion) {
         originalPath = req.path;
     res.setHeader('Cache-Control', cacheControl);
     console.log(`not exclusion ${exclusion.test(originalPath)}`)
-    if(typeof acceptEncodingsString != 'undefined') {
+    if(!exclusion.test(originalPath) && typeof acceptEncodingsString != 'undefined') {
       var acceptEncodings = acceptEncodingsString.split(", ");
       try {
-        var stats = fs.statSync(`${assetPath}/${originalPath}.gz`);
-        console.log(`${assetPath}/${originalPath}.gz`);
+        var stats = fs.statSync(`${assetPath}${originalPath}.gz`);
+        console.log(`${assetPath}${originalPath}.gz`);
 
         if(acceptEncodings.indexOf('gzip') >= 0 && stats.isFile()) {
           res.append('Content-Encoding', 'gzip');
           res.setHeader('Vary', 'Accept-Encoding');
           req.url = `${req.url}.gz`;
           console.log(res.toString());
-          var type = mime.lookup(`${assetPath}/${originalPath}`);
+          var type = mime.lookup(`${assetPath}${originalPath}`);
           if (typeof type != 'undefined') {
             var charset = mime.charsets.lookup(type);
             res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
