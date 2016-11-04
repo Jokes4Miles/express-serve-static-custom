@@ -32,6 +32,7 @@ module.exports = function(assetPath,cacheControl,exclusion) {
           if (typeof type != 'undefined') {
             var charset = mime.charsets.lookup(type);
             res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
+            console.log(JSON.stringify(res));
           }
         }
       } catch(e) {
