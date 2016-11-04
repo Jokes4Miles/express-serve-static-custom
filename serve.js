@@ -4,7 +4,7 @@ var mime = require('mime'),
  * Express middleware that serves static gzipped assets if they are available with specified max-age
  * @param  {String} assetPath    where the assets are stored
  * @param  {String} cacheControl time in seconds the asset is to be cached ex: 'public, max-age=512000'
- * @param  {RegExp} Regular Expression to match filepaths to exclude
+ * @param  {RegExp} exclusion    regex used to match filepaths to exclude
  * @return {function}
  */
 module.exports = function(assetPath,cacheControl,exclusion) {
@@ -22,21 +22,18 @@ module.exports = function(assetPath,cacheControl,exclusion) {
       var acceptEncodings = acceptEncodingsString.split(", ");
       try {
         var stats = fs.statSync(`${assetPath}${originalPath}.gz`);
-        console.log(`${assetPath}${originalPath}.gz`);
-
         if(acceptEncodings.indexOf('gzip') >= 0 && stats.isFile()) {
           res.setHeader('Content-Encoding', 'gzip');
           res.setHeader('Vary', 'Accept-Encoding');
           req.url = `${req.url}.gz`;
           var type = mime.lookup(`${assetPath}${originalPath}`);
-          console.log(type);
           if (typeof type != 'undefined') {
             var charset = mime.charsets.lookup(type);
             res.setHeader('Content-Type', type + (charset ? '; charset=' + charset : ''));
-            console.log('set content type');
           }
         }
       } catch(e) {
+        console.log("GZIP - ERROR");
       }
     }
     next();
