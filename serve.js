@@ -18,7 +18,7 @@ module.exports = function(assetPath,cacheControl,exclusion) {
     var acceptEncodingsString = req.get('Accept-Encoding'),
         originalPath = req.path;
     res.setHeader('Cache-Control', cacheControl);
-    if(!exclusion.test(originalPath) && typeof acceptEncodingsString != 'undefined') {
+    if(originalPath.includes('.') && !exclusion.test(originalPath) && typeof acceptEncodingsString != 'undefined') {
       var acceptEncodings = acceptEncodingsString.split(", ");
       try {
         var stats = fs.statSync(`${assetPath}${originalPath}.gz`);
