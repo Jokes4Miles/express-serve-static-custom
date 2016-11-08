@@ -33,7 +33,7 @@ module.exports = function(assetPath,cacheControl,exclusion) {
           }
         }
       } catch(e) {
-        console.log("GZIP - ERROR - `${assetPath}${originalPath}.gz`");
+        console.log(`GZIP - ERROR - ${assetPath}${originalPath}.gz`);
       }
     }
     next();
