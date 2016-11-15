@@ -5,9 +5,10 @@ var mime = require('mime'),
  * @param  {String} assetPath    where the assets are stored
  * @param  {String} cacheControl time in seconds the asset is to be cached ex: 'public, max-age=512000'
  * @param  {RegExp} exclusion    regex used to match filepaths to exclude
+ * @param  {Boolean} printError  boolean whether to print the error for gzip
  * @return {function}
  */
-module.exports = function(assetPath,cacheControl,exclusion) {
+module.exports = function(assetPath,cacheControl,exclusion,printError) {
   /**
    * Executed when called by express
    * @param  {Object}   req  request from express
@@ -33,7 +34,8 @@ module.exports = function(assetPath,cacheControl,exclusion) {
           }
         }
       } catch(e) {
-        console.log(`GZIP - ERROR - ${assetPath}${originalPath}.gz`);
+        if(printError)
+          console.log(`GZIP - ERROR - ${assetPath}${originalPath}.gz`);
       }
     }
     next();
